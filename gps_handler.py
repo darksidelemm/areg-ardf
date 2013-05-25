@@ -77,15 +77,18 @@ while True:
         elif nmea_type == "GPRMC":
             # Attempt to parse a GPRMC string, and gate the bearing if
             # the vehicle velocity is above our threshold
-            gprmc = line.split('r')
-            if len(gprmc) == 13:
+            gprmc = line.split(',')
+            if len(gprmc) == 12:
                 velocity = float(gprmc[7])*1.82
-                declination = float(gprmc[10])
-                if gprmc[11] == "W":
-                    declination = declination*-1.0
-                    
+                print "Velocity: " + str(velocity)
+                try:
+                    declination = float(gprmc[10])
+                    if gprmc[11] == "W":
+                        declination = declination*-1.0
+                except:
+                    pass
                 if velocity > velocity_threshold and magnetometer_override == False:
-                    true_bearing = int(gprmc[8])
+                    true_bearing = float(gprmc[8])
                     print "Gating bearing of " + str(true_bearing)
         
         elif nmea_type == "HCHDG":
